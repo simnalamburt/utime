@@ -2,6 +2,16 @@
 name = "utime"
 version = "0.1.0"
 authors = ["Hyeon Kim <simnalamburt@gmail.com>"]
+homepage = "https://github.com/simnalamburt/utime"
+repository = "https://github.com/simnalamburt/utime"
+documentation = "https://simnalamburt.github.com/utime"
+license = "BSD-2-Clause"
+keywords = ["utime", "mtime"]
+readme = "README.md"
+
+description = """
+Missing utime function for Rust.
+"""
 
 [dependencies]
 libc = "0.1"
