@@ -2,3 +2,6 @@
 name = "utime"
 version = "0.1.0"
 authors = ["Hyeon Kim <simnalamburt@gmail.com>"]
+
+[dependencies]
+libc = "0.1"
