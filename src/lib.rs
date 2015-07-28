@@ -12,6 +12,8 @@
 //! set_file_times("target/testdummy", 1000000, 1000000000).unwrap();
 //! ```
 
+#![deny(warnings, missing_docs)]
+
 #[cfg(unix)] extern crate libc;
 
 #[cfg(windows)] extern crate winapi;
