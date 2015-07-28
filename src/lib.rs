@@ -1,11 +1,21 @@
+//! Missing utime function for Rust
+//!
+//! Standard library of Rust doesn't provide the way to set atime/mtime of a file. This crate
+//! provides stable way to change a file's last modification and access time.
+
 #[cfg(unix)]
 extern crate libc;
 
 use std::path::Path;
 use std::io;
 
-pub fn set_file_times<P: AsRef<Path>>(path: P, atime: u64, mtime: u64) -> io::Result<()> {
-    utime(path, atime, mtime)
+/// Changes the timestamps for a file's last modification and access time.
+///
+/// The file at the path specified will have its last access time set to
+/// `accessed` and its modification time set to `modified`. The times specified
+/// should be in seconds.
+pub fn set_file_times<P: AsRef<Path>>(path: P, accessed: u64, modified: u64) -> io::Result<()> {
+    utime(path, accessed, modified)
 }
 
 #[cfg(unix)]
