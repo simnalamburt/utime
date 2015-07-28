@@ -49,7 +49,7 @@ fn utime<P: AsRef<Path>>(path: P, atime: u64, mtime: u64) -> io::Result<()> {
     use winapi::{FILETIME, DWORD};
     use kernel32::SetFileTime;
 
-    let f = try!(OpenOptions::new().write(true).open(p));
+    let f = try!(OpenOptions::new().write(true).open(path));
     let atime = to_filetime(atime);
     let mtime = to_filetime(mtime);
     let ret = unsafe { SetFileTime(f.as_raw_handle() as *mut _, 0 as *const _, &atime, &mtime) };
