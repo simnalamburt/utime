@@ -1,11 +1,11 @@
 extern crate utime;
 
-use std::fs::{File, metadata};
-use utime::set_file_times;
-
+#[cfg(unix)]
 #[test]
 fn test_utime() {
+    use std::fs::{File, metadata};
     use std::os::unix::fs::MetadataExt;
+    use utime::set_file_times;
 
     let path = "target/testdummy";
 
