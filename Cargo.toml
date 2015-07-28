@@ -15,3 +15,5 @@ Missing utime function for Rust.
 
 [dependencies]
 libc = "0.1"
+winapi = "0.2"
+kernel32-sys = "0.1"

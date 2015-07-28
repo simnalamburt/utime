@@ -3,8 +3,10 @@
 //! Standard library of Rust doesn't provide the way to set atime/mtime of a file. This crate
 //! provides stable way to change a file's last modification and access time.
 
-#[cfg(unix)]
-extern crate libc;
+#[cfg(unix)] extern crate libc;
+
+#[cfg(windows)] extern crate winapi;
+#[cfg(windows)] extern crate kernel32;
 
 use std::path::Path;
 use std::io;
