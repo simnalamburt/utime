@@ -55,10 +55,10 @@ fn utime<P: AsRef<Path>>(path: P, atime: u64, mtime: u64) -> io::Result<()> {
 
     // FILETIME is a count of 100ns intervals, and there are 10^7 of these in a second
     fn to_filetime(seconds: u64) -> FILETIME {
-        let seconds = seconds * 10_000_000;
+        let intervals = seconds * 10000000 + 116444736000000000;
         FILETIME {
-            dwLowDateTime: seconds as DWORD,
-            dwHighDateTime: (seconds >> 32) as DWORD,
+            dwLowDateTime: intervals as DWORD,
+            dwHighDateTime: (intervals >> 32) as DWORD,
         }
     }
 
