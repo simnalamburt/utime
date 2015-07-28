@@ -12,10 +12,14 @@ utime = "0.1"
 ```
 ```rust
 use std::fs::File;
-use utime::set_file_times;
+use utime::*;
 
 File::create("target/testdummy").unwrap();
 set_file_times("target/testdummy", 1000000, 1000000000).unwrap();
+
+let (accessed, modified) = get_file_times("target/testdummy").unwrap();
+assert_eq!(accessed, 1000000);
+assert_eq!(modified, 1000000000);
 ```
 
 --------
