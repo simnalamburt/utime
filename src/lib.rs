@@ -4,8 +4,12 @@ extern crate libc;
 use std::path::Path;
 use std::io;
 
-#[cfg(unix)]
 pub fn set_file_times<P: AsRef<Path>>(path: P, atime: u64, mtime: u64) -> io::Result<()> {
+    utime(path, atime, mtime)
+}
+
+#[cfg(unix)]
+fn utime<P: AsRef<Path>>(path: P, atime: u64, mtime: u64) -> io::Result<()> {
     use std::os::unix::prelude::*;
     use std::ffi::CString;
     use libc::{timeval, time_t, c_char, c_int};
@@ -27,7 +31,7 @@ pub fn set_file_times<P: AsRef<Path>>(path: P, atime: u64, mtime: u64) -> io::Re
 }
 
 #[cfg(windows)]
-pub fn set_file_times<P: AsRef<Path>>(path: P, atime: u64, mtime: u64) -> io::Result<()> {
+fn utime<P: AsRef<Path>>(path: P, atime: u64, mtime: u64) -> io::Result<()> {
     use std::fs::OpenOptions;
     use std::os::windows::prelude::*;
     use winapi::{FILETIME, DWORD};
