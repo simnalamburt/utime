@@ -10,7 +10,7 @@ keywords = ["utime", "mtime"]
 readme = "README.md"
 
 description = """
-Missing utime function for Rust.
+A missing utime function for Rust.
 """
 
 [dependencies]

@@ -2,10 +2,20 @@ utime [![crates-i][]][crates-a] [![travis-i][]][travis-a] [![appveyor-i][]][appv
 ========
 A missing utime function for Rust. [Documentation][]
 
+Standard library of Rust doesn't provide stable way to set atime/mtime of a
+file. This crate provides stable way to change a file's last modification and
+access time.
+
 ```toml
-# Cargo.toml
 [dependencies]
 utime = "0.1"
+```
+```rust
+use std::fs::File;
+use utime::set_file_times;
+
+File::create("target/testdummy").unwrap();
+set_file_times("target/testdummy", 1000000, 1000000000).unwrap();
 ```
 
 --------

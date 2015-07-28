@@ -1,7 +1,16 @@
-//! Missing utime function for Rust
+//! A missing utime function for Rust
 //!
-//! Standard library of Rust doesn't provide the way to set atime/mtime of a file. This crate
-//! provides stable way to change a file's last modification and access time.
+//! Standard library of Rust doesn't provide stable way to set atime/mtime of a
+//! file. This crate provides stable way to change a file's last modification and
+//! access time.
+//!
+//! ```rust
+//! use std::fs::File;
+//! use utime::set_file_times;
+//!
+//! File::create("target/testdummy").unwrap();
+//! set_file_times("target/testdummy", 1000000, 1000000000).unwrap();
+//! ```
 
 #[cfg(unix)] extern crate libc;
 
