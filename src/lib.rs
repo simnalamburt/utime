@@ -5,7 +5,7 @@ use std::path::Path;
 use std::io;
 
 #[cfg(unix)]
-pub fn set_file_times(path: &Path, atime: u64, mtime: u64) -> io::Result<()> {
+pub fn set_file_times<P: AsRef<Path>>(path: P, atime: u64, mtime: u64) -> io::Result<()> {
     use std::os::unix::prelude::*;
     use std::ffi::CString;
     use libc::{timeval, time_t, c_char, c_int};
@@ -13,7 +13,7 @@ pub fn set_file_times(path: &Path, atime: u64, mtime: u64) -> io::Result<()> {
         fn utimes(name: *const c_char, times: *const timeval) -> c_int;
     }
 
-    let path = try!(CString::new(path.as_os_str().as_bytes()));
+    let path = try!(CString::new(path.as_ref().as_os_str().as_bytes()));
     let atime = timeval { tv_sec: atime as time_t, tv_usec: 0, };
     let mtime = timeval { tv_sec: mtime as time_t, tv_usec: 0, };
     let times = [atime, mtime];
@@ -27,7 +27,7 @@ pub fn set_file_times(path: &Path, atime: u64, mtime: u64) -> io::Result<()> {
 }
 
 #[cfg(windows)]
-pub fn set_file_times(path: &Path, atime: u64, mtime: u64) -> io::Result<()> {
+pub fn set_file_times<P: AsRef<Path>>(path: P, atime: u64, mtime: u64) -> io::Result<()> {
     use std::fs::OpenOptions;
     use std::os::windows::prelude::*;
     use winapi::{FILETIME, DWORD};
