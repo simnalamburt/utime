@@ -7,12 +7,15 @@ os:
   - linux
   - osx
 
+cache:
+  directories:
+    - ~/.cargo
+    - target
 
+# IRC notification
 notifications:
   irc:
     nick: utime
-    channels:
-      - irc.uriirc.org:16667#hyeon
-    template:
-      - "#%{build_number} %{result}, %{build_url}"
+    channels: 'ircs://irc.uriirc.org:16664#hyeon'
+    template: '#%{build_number} %{result}, %{build_url}'
     skip_join: true
