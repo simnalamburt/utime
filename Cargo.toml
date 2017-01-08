@@ -1,6 +1,6 @@
 [package]
 name = "utime"
-version = "0.1.3"
+version = "0.2.0"
 authors = ["Hyeon Kim <simnalamburt@gmail.com>"]
 homepage = "https://github.com/simnalamburt/utime"
 repository = "https://github.com/simnalamburt/utime"
