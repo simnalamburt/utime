@@ -1,23 +1,17 @@
+os: Visual Studio 2015
+
 environment:
   matrix:
-  - TARGET: x86_64-pc-windows-gnu
-    ARCH: amd64
-  - TARGET: i686-pc-windows-gnu
-    ARCH: x86
-  - TARGET: x86_64-pc-windows-msvc
-    ARCH: amd64
-  - TARGET: i686-pc-windows-msvc
-    ARCH: x86
+    - channel: stable
+      target: x86_64-pc-windows-msvc
+
 install:
-  - ps: Start-FileDownload "https://static.rust-lang.org/dist/rust-nightly-${env:TARGET}.exe"
-  - rust-nightly-%TARGET%.exe /VERYSILENT /NORESTART /DIR="C:\Program Files (x86)\Rust"
-  - call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" %ARCH%
-  - SET PATH=%PATH%;C:\Program Files (x86)\Rust\bin
-  - SET PATH=%PATH%;C:\MinGW\bin
-  - rustc -V
-  - cargo -V
+  - appveyor DownloadFile https://win.rustup.rs/ -FileName rustup-init.exe
+  - rustup-init -yv --default-toolchain %channel% --default-host %target%
+  - set PATH=%PATH%;%USERPROFILE%\.cargo\bin
+  - rustc -vV
+  - cargo -vV
 
 build: false
-
 test_script:
-  - cargo test --verbose
+  - cargo test --verbose %cargoflags%
