@@ -5,12 +5,15 @@ extern crate utime;
 
 use std::fs::File;
 use utime::*;
+use std::time::{SystemTime, UNIX_EPOCH};
 
-#[cfg(unix)]
+fn as_secs(v: std::io::Result<SystemTime>) -> u64 {
+    v.unwrap().duration_since(UNIX_EPOCH).unwrap().as_secs()
+}
+
 #[test]
 fn test_set_times() {
     use std::fs::metadata;
-    use std::os::unix::fs::MetadataExt;
 
     let path = "target/testdummy";
 
@@ -22,8 +25,10 @@ fn test_set_times() {
 
     // Check if set_file_times works correctly
     let meta = metadata(path).unwrap();
-    assert_eq!(meta.atime(), 1_000_000);
-    assert_eq!(meta.mtime(), 1_000_000_000);
+    let atime = as_secs(meta.accessed());
+    let mtime = as_secs(meta.modified());
+    assert_eq!(atime, 1_000_000);
+    assert_eq!(mtime, 1_000_000_000);
 }
 
 #[test]
