@@ -61,7 +61,10 @@ pub fn set_file_times<P: AsRef<Path>>(path: P, accessed: u64, modified: u64) -> 
         use winapi::{FILETIME, DWORD};
         use kernel32::SetFileTime;
 
-        let f = try!(OpenOptions::new().write(true).open(path));
+        let f = try!(OpenOptions::new()
+                     .write(true)
+                     .custom_flags(winapi::FILE_FLAG_BACKUP_SEMANTICS)
+                     .open(path));
         let atime = to_filetime(atime);
         let mtime = to_filetime(mtime);
 
