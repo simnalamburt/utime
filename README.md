@@ -1,8 +1,8 @@
-utime [![Travis Build Status]][travis] [![AppVeyor Build Status]][appveyor]
+utime
 ========
 A missing utime function for Rust.
 
-- [API Documentation](https://simnalamburt.github.io/utime/)
+- [API Documentation](https://docs.rs/utime)
 - [See `utime` in crates.io](https://crates.io/crates/utime)
 
 Standard library of Rust doesn't provide stable way to set atime/mtime of a
@@ -11,7 +11,7 @@ access time.
 
 ```toml
 [dependencies]
-utime = "0.1"
+utime = "0.2"
 ```
 ```rust
 use std::fs::File;
@@ -25,11 +25,19 @@ assert_eq!(accessed, 1000000);
 assert_eq!(modified, 1000000000);
 ```
 
+### Build Status
+
+Linux / macOS | Windows
+:------------:|:--------:
+[![Travis Build Status]][travis] | [![AppVeyor Build Status]][appveyor]
+
+<br>
+
 --------
 
 [BSD 2-Clause](LICENSE.md)
 
-[Travis Build Status]: https://travis-ci.org/simnalamburt/utime.svg?style=flat
+[Travis Build Status]: https://badgen.net/travis/simnalamburt/utime/master?icon=travis&label=build
 [travis]: https://travis-ci.org/simnalamburt/utime
-[AppVeyor Build Status]: https://ci.appveyor.com/api/projects/status/wl66f4br7efxw23a/branch/master?svg=true
+[AppVeyor Build Status]: https://badgen.net/appveyor/ci/simnalamburt/utime/master?icon=appveyor&label=build
 [appveyor]: https://ci.appveyor.com/project/simnalamburt/utime/branch/master
