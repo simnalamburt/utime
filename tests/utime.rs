@@ -27,7 +27,7 @@ fn check_utime(path: &str) {
 
 #[test]
 fn test_set_times() {
-    let path = "target/testdummy";
+    let path = "target/dummy1";
 
     // Test with a dummy file.
     File::create(path).unwrap();
@@ -42,7 +42,7 @@ fn test_set_times() {
 
 #[test]
 fn test_get_times() {
-    let path = "target/testdummy";
+    let path = "target/dummy2";
 
     // Create dummy file for the test
     File::create(path).unwrap();
