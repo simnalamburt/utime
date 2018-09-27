@@ -34,10 +34,13 @@ Linux / macOS | Windows
 <br>
 
 --------
-
-[BSD 2-Clause](LICENSE.md)
+*utime* is primarily distributed under the terms of both the [MIT
+license] and the [Apache License (Version 2.0)]. See [COPYRIGHT] for details.
 
 [Travis Build Status]: https://badgen.net/travis/simnalamburt/utime/master?icon=travis&label=build
 [travis]: https://travis-ci.org/simnalamburt/utime
 [AppVeyor Build Status]: https://badgen.net/appveyor/ci/simnalamburt/utime/master?icon=appveyor&label=build
 [appveyor]: https://ci.appveyor.com/project/simnalamburt/utime/branch/master
+[MIT license]: LICENSE-MIT
+[Apache License (Version 2.0)]: LICENSE-APACHE
+[COPYRIGHT]: COPYRIGHT
