@@ -4,7 +4,6 @@ version = "0.2.0"
 authors = ["Hyeon Kim <simnalamburt@gmail.com>"]
 homepage = "https://github.com/simnalamburt/utime"
 repository = "https://github.com/simnalamburt/utime"
-documentation = "https://simnalamburt.github.com/utime/"
 license = "Apache-2.0 OR MIT"
 keywords = ["utime", "mtime"]
 readme = "README.md"
@@ -17,3 +16,8 @@ A missing utime function for Rust.
 libc = "0.2"
 winapi = "0.2"
 kernel32-sys = "0.2"
+
+[badges]
+appveyor = { repository = "simnalamburt/utime" }
+travis-ci = { repository = "simnalamburt/utime" }
+maintenance = { status = "passively-maintained" }
