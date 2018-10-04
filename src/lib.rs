@@ -88,6 +88,20 @@ pub fn set_file_times<P: AsRef<Path>>(path: P, accessed: u64, modified: u64) -> 
     utime(path, accessed, modified)
 }
 
+/// Only change the `accessed` time of the file.
+pub fn set_atime<P: AsRef<Path>>(path: P, atime: u64) -> io::Result<()> {
+    let path = path.as_ref();
+    let (_, mtime) = get_file_times(path)?;
+    set_file_times(path, atime, mtime)
+}
+
+/// Only change the `modified` time of the file.
+pub fn set_mtime<P: AsRef<Path>>(path: P, mtime: u64) -> io::Result<()> {
+    let path = path.as_ref();
+    let (atime, _) = get_file_times(path)?;
+    set_file_times(path, atime, mtime)
+}
+
 /// Retrieve the timestamps for a file's last modification and access time.
 ///
 /// Returns `(accessed, modified)`. The times are in seconds.
