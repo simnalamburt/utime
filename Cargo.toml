@@ -14,7 +14,7 @@ A missing utime function for Rust.
 
 [dependencies]
 libc = "0.2"
-winapi = "0.3"
+winapi = "0.2"
 kernel32-sys = "0.2"
 
 [badges]
