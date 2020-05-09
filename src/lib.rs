@@ -41,7 +41,7 @@ pub fn set_file_times<P: AsRef<Path>>(path: P, accessed: u64, modified: u64) -> 
             fn utimes(name: *const c_char, times: *const timeval) -> c_int;
         }
 
-        let path = try!(CString::new(path.as_ref().as_os_str().as_bytes()));
+        let path = CString::new(path.as_ref().as_os_str().as_bytes())?;
         let atime = timeval { tv_sec: atime as time_t, tv_usec: 0, };
         let mtime = timeval { tv_sec: mtime as time_t, tv_usec: 0, };
         let times = [atime, mtime];
@@ -61,10 +61,10 @@ pub fn set_file_times<P: AsRef<Path>>(path: P, accessed: u64, modified: u64) -> 
         use winapi::{FILETIME, DWORD};
         use kernel32::SetFileTime;
 
-        let f = try!(OpenOptions::new()
+        let f = OpenOptions::new()
                      .write(true)
                      .custom_flags(winapi::FILE_FLAG_BACKUP_SEMANTICS)
-                     .open(path));
+                     .open(path)?;
         let atime = to_filetime(atime);
         let mtime = to_filetime(mtime);
 
@@ -97,7 +97,7 @@ pub fn get_file_times<P: AsRef<Path>>(path: P) -> io::Result<(u64, u64)> {
         use std::fs::metadata;
         use std::os::unix::fs::MetadataExt;
 
-        let meta = try!(metadata(path));
+        let meta = metadata(path)?;
         Ok((meta.atime() as u64, meta.mtime() as u64))
     }
 
@@ -108,7 +108,7 @@ pub fn get_file_times<P: AsRef<Path>>(path: P) -> io::Result<(u64, u64)> {
         use winapi::FILETIME;
         use kernel32::GetFileTime;
 
-        let f = try!(OpenOptions::new().write(true).open(path));
+        let f = OpenOptions::new().write(true).open(path)?;
         let handle = f.as_raw_handle() as *mut _;
         let mut atime = FILETIME { dwLowDateTime: 0, dwHighDateTime: 0 };
         let mut mtime = FILETIME { dwLowDateTime: 0, dwHighDateTime: 0 };
