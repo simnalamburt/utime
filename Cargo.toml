@@ -2,15 +2,18 @@
 name = "utime"
 version = "0.2.2"
 authors = ["Hyeon Kim <simnalamburt@gmail.com>"]
-homepage = "https://github.com/simnalamburt/utime"
-repository = "https://github.com/simnalamburt/utime"
-license = "Apache-2.0 OR MIT"
-keywords = ["utime", "mtime"]
-readme = "README.md"
+edition = "2018"
 
 description = """
 A missing utime function for Rust.
 """
+
+documentation = "https://docs.rs/utime/"
+readme = "README.md"
+homepage = "https://github.com/simnalamburt/utime"
+repository = "https://github.com/simnalamburt/utime"
+license = "Apache-2.0 OR MIT"
+keywords = ["utime", "mtime"]
 
 [dependencies]
 libc = "0.2"
