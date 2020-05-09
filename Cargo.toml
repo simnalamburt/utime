@@ -18,5 +18,4 @@ winapi = "0.2"
 kernel32-sys = "0.2"
 
 [badges]
-travis-ci = { repository = "simnalamburt/utime" }
 maintenance = { status = "passively-maintained" }

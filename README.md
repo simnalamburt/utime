@@ -25,12 +25,6 @@ assert_eq!(accessed, 1000000);
 assert_eq!(modified, 1000000000);
 ```
 
-### Build Status
-
-| Linux / macOS |
-|:-------------:|
-| [![Travis Build Status]][travis] |
-
 <br>
 
 --------
