@@ -18,13 +18,16 @@
 
 #![deny(warnings, missing_docs)]
 
-#[cfg(unix)] extern crate libc;
+#[cfg(unix)]
+extern crate libc;
 
-#[cfg(windows)] extern crate winapi;
-#[cfg(windows)] extern crate kernel32;
+#[cfg(windows)]
+extern crate kernel32;
+#[cfg(windows)]
+extern crate winapi;
 
-use std::path::Path;
 use std::io;
+use std::path::Path;
 
 /// Changes the timestamps for a file's last modification and access time.
 ///
@@ -34,16 +37,22 @@ use std::io;
 pub fn set_file_times<P: AsRef<Path>>(path: P, accessed: u64, modified: u64) -> io::Result<()> {
     #[cfg(unix)]
     fn utime<P: AsRef<Path>>(path: P, atime: u64, mtime: u64) -> io::Result<()> {
-        use std::os::unix::prelude::*;
+        use libc::{c_char, c_int, time_t, timeval};
         use std::ffi::CString;
-        use libc::{timeval, time_t, c_char, c_int};
-        extern {
+        use std::os::unix::prelude::*;
+        extern "C" {
             fn utimes(name: *const c_char, times: *const timeval) -> c_int;
         }
 
         let path = CString::new(path.as_ref().as_os_str().as_bytes())?;
-        let atime = timeval { tv_sec: atime as time_t, tv_usec: 0, };
-        let mtime = timeval { tv_sec: mtime as time_t, tv_usec: 0, };
+        let atime = timeval {
+            tv_sec: atime as time_t,
+            tv_usec: 0,
+        };
+        let mtime = timeval {
+            tv_sec: mtime as time_t,
+            tv_usec: 0,
+        };
         let times = [atime, mtime];
 
         let ret = unsafe { utimes(path.as_ptr(), times.as_ptr()) };
@@ -56,15 +65,15 @@ pub fn set_file_times<P: AsRef<Path>>(path: P, accessed: u64, modified: u64) -> 
 
     #[cfg(windows)]
     fn utime<P: AsRef<Path>>(path: P, atime: u64, mtime: u64) -> io::Result<()> {
+        use kernel32::SetFileTime;
         use std::fs::OpenOptions;
         use std::os::windows::prelude::*;
-        use winapi::{FILETIME, DWORD};
-        use kernel32::SetFileTime;
+        use winapi::{DWORD, FILETIME};
 
         let f = OpenOptions::new()
-                     .write(true)
-                     .custom_flags(winapi::FILE_FLAG_BACKUP_SEMANTICS)
-                     .open(path)?;
+            .write(true)
+            .custom_flags(winapi::FILE_FLAG_BACKUP_SEMANTICS)
+            .open(path)?;
         let atime = to_filetime(atime);
         let mtime = to_filetime(mtime);
 
@@ -77,7 +86,8 @@ pub fn set_file_times<P: AsRef<Path>>(path: P, accessed: u64, modified: u64) -> 
             }
         }
 
-        let ret = unsafe { SetFileTime(f.as_raw_handle() as *mut _, 0 as *const _, &atime, &mtime) };
+        let ret =
+            unsafe { SetFileTime(f.as_raw_handle() as *mut _, 0 as *const _, &atime, &mtime) };
         if ret != 0 {
             Ok(())
         } else {
@@ -103,18 +113,26 @@ pub fn get_file_times<P: AsRef<Path>>(path: P) -> io::Result<(u64, u64)> {
 
     #[cfg(windows)]
     fn utime<P: AsRef<Path>>(path: P) -> io::Result<(u64, u64)> {
+        use kernel32::GetFileTime;
         use std::fs::OpenOptions;
         use std::os::windows::prelude::*;
         use winapi::FILETIME;
-        use kernel32::GetFileTime;
 
         let f = OpenOptions::new().write(true).open(path)?;
         let handle = f.as_raw_handle() as *mut _;
-        let mut atime = FILETIME { dwLowDateTime: 0, dwHighDateTime: 0 };
-        let mut mtime = FILETIME { dwLowDateTime: 0, dwHighDateTime: 0 };
+        let mut atime = FILETIME {
+            dwLowDateTime: 0,
+            dwHighDateTime: 0,
+        };
+        let mut mtime = FILETIME {
+            dwLowDateTime: 0,
+            dwHighDateTime: 0,
+        };
 
         let ret = unsafe { GetFileTime(handle, 0 as *mut _, &mut atime, &mut mtime) };
-        if ret == 0 { return Err(io::Error::last_os_error()); }
+        if ret == 0 {
+            return Err(io::Error::last_os_error());
+        }
 
         // FILETIME is a count of 100ns intervals, and there are 10^7 of these in a second
         fn to_seconds(ft: FILETIME) -> u64 {

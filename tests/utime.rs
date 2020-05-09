@@ -1,11 +1,13 @@
 extern crate utime;
 
-#[cfg(windows)] extern crate winapi;
-#[cfg(windows)] extern crate kernel32;
+#[cfg(windows)]
+extern crate kernel32;
+#[cfg(windows)]
+extern crate winapi;
 
 use std::fs::File;
-use utime::*;
 use std::time::{SystemTime, UNIX_EPOCH};
+use utime::*;
 
 fn as_secs(v: std::io::Result<SystemTime>) -> u64 {
     v.unwrap().duration_since(UNIX_EPOCH).unwrap().as_secs()
