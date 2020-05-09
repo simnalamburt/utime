@@ -27,9 +27,9 @@ assert_eq!(modified, 1000000000);
 
 ### Build Status
 
-Linux / macOS | Windows
-:------------:|:--------:
-[![Travis Build Status]][travis] | [![AppVeyor Build Status]][appveyor]
+| Linux / macOS |
+|:-------------:|
+| [![Travis Build Status]][travis] |
 
 <br>
 
