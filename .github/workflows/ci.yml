@@ -3,7 +3,7 @@ on: [push, pull_request]
 name: Continuous integration
 
 jobs:
-  test:
+  build_test:
     name: Build and test
     strategy:
       matrix:
