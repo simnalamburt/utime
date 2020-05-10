@@ -79,7 +79,7 @@ pub fn set_file_times<P: AsRef<Path>>(path: P, accessed: u64, modified: u64) -> 
 
         // FILETIME is a count of 100ns intervals, and there are 10^7 of these in a second
         fn to_filetime(seconds: u64) -> FILETIME {
-            let intervals = seconds * 10000000 + 116444736000000000;
+            let intervals = seconds * 10_000_000 + 116_444_736_000_000_000;
             FILETIME {
                 dwLowDateTime: intervals as DWORD,
                 dwHighDateTime: (intervals >> 32) as DWORD,
@@ -87,7 +87,7 @@ pub fn set_file_times<P: AsRef<Path>>(path: P, accessed: u64, modified: u64) -> 
         }
 
         let ret =
-            unsafe { SetFileTime(f.as_raw_handle() as *mut _, 0 as *const _, &atime, &mtime) };
+            unsafe { SetFileTime(f.as_raw_handle() as *mut _, std::ptr::null(), &atime, &mtime) };
         if ret != 0 {
             Ok(())
         } else {
@@ -129,7 +129,7 @@ pub fn get_file_times<P: AsRef<Path>>(path: P) -> io::Result<(u64, u64)> {
             dwHighDateTime: 0,
         };
 
-        let ret = unsafe { GetFileTime(handle, 0 as *mut _, &mut atime, &mut mtime) };
+        let ret = unsafe { GetFileTime(handle, std::ptr::null_mut(), &mut atime, &mut mtime) };
         if ret == 0 {
             return Err(io::Error::last_os_error());
         }
@@ -138,7 +138,7 @@ pub fn get_file_times<P: AsRef<Path>>(path: P) -> io::Result<(u64, u64)> {
         fn to_seconds(ft: FILETIME) -> u64 {
             let lo = ft.dwLowDateTime as u64;
             let hi = (ft.dwHighDateTime as u64) << 32;
-            let intervals = lo + hi - 116444736000000000;
+            let intervals = lo + hi - 116_444_736_000_000_000;
 
             intervals / 10_000_000
         }
