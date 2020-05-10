@@ -4,8 +4,11 @@ name: Continuous integration
 
 jobs:
   test:
-    name: Test
-    runs-on: ubuntu-latest
+    name: Build and test
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
@@ -13,6 +16,9 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: build
       - uses: actions-rs/cargo@v1
         with:
           command: test
@@ -35,7 +41,10 @@ jobs:
 
   clippy:
     name: Clippy
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
