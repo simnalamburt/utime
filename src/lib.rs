@@ -86,8 +86,14 @@ pub fn set_file_times<P: AsRef<Path>>(path: P, accessed: u64, modified: u64) -> 
             }
         }
 
-        let ret =
-            unsafe { SetFileTime(f.as_raw_handle() as *mut _, std::ptr::null(), &atime, &mtime) };
+        let ret = unsafe {
+            SetFileTime(
+                f.as_raw_handle() as *mut _,
+                std::ptr::null(),
+                &atime,
+                &mtime,
+            )
+        };
         if ret != 0 {
             Ok(())
         } else {
