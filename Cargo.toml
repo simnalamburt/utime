@@ -1,6 +1,6 @@
 [package]
 name = "utime"
-version = "0.2.3"
+version = "0.3.0"
 authors = ["Hyeon Kim <simnalamburt@gmail.com>"]
 edition = "2018"
 
