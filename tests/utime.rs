@@ -52,3 +52,12 @@ fn test_get_times() {
     set_file_times(path, 1_000_000, 1_000_000_000).unwrap();
     assert_eq!(get_file_times(path).unwrap(), (1_000_000, 1_000_000_000));
 }
+
+#[test]
+fn test_set_negative_time() {
+    let path = "target/dummy3";
+
+    File::create(path).unwrap();
+    set_file_times(path, -36000, -36000).unwrap();
+    assert_eq!(get_file_times(path).unwrap(), (-36000, -36000));
+}

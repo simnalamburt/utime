@@ -1,7 +1,7 @@
 //! A missing utime function for Rust
 //!
-//! Standard library of Rust doesn't provide stable way to set atime/mtime of a
-//! file. This crate provides stable way to change a file's last modification and
+//! Standard library of Rust doesn't provide stable way to set the atime/mtime of a
+//! file. This crate provides a stable way to change a file's last modification and
 //! access time.
 //!
 //! ```rust
@@ -33,10 +33,10 @@ use std::path::Path;
 ///
 /// The file at the path specified will have its last access time set to
 /// `accessed` and its modification time set to `modified`. The times specified
-/// should be in seconds.
-pub fn set_file_times<P: AsRef<Path>>(path: P, accessed: u64, modified: u64) -> io::Result<()> {
+/// should be in seconds from the Unix epoch.
+pub fn set_file_times<P: AsRef<Path>>(path: P, accessed: i64, modified: i64) -> io::Result<()> {
     #[cfg(unix)]
-    fn utime<P: AsRef<Path>>(path: P, atime: u64, mtime: u64) -> io::Result<()> {
+    fn utime<P: AsRef<Path>>(path: P, atime: i64, mtime: i64) -> io::Result<()> {
         use libc::{c_char, c_int, time_t, timeval};
         use std::ffi::CString;
         use std::os::unix::prelude::*;
@@ -64,7 +64,7 @@ pub fn set_file_times<P: AsRef<Path>>(path: P, accessed: u64, modified: u64) -> 
     }
 
     #[cfg(windows)]
-    fn utime<P: AsRef<Path>>(path: P, atime: u64, mtime: u64) -> io::Result<()> {
+    fn utime<P: AsRef<Path>>(path: P, atime: i64, mtime: i64) -> io::Result<()> {
         use kernel32::SetFileTime;
         use std::fs::OpenOptions;
         use std::os::windows::prelude::*;
@@ -78,7 +78,7 @@ pub fn set_file_times<P: AsRef<Path>>(path: P, accessed: u64, modified: u64) -> 
         let mtime = to_filetime(mtime);
 
         // FILETIME is a count of 100ns intervals, and there are 10^7 of these in a second
-        fn to_filetime(seconds: u64) -> FILETIME {
+        fn to_filetime(seconds: i64) -> FILETIME {
             let intervals = seconds * 10_000_000 + 116_444_736_000_000_000;
             FILETIME {
                 dwLowDateTime: intervals as DWORD,
@@ -106,19 +106,19 @@ pub fn set_file_times<P: AsRef<Path>>(path: P, accessed: u64, modified: u64) -> 
 
 /// Retrieve the timestamps for a file's last modification and access time.
 ///
-/// Returns `(accessed, modified)`. The times are in seconds.
-pub fn get_file_times<P: AsRef<Path>>(path: P) -> io::Result<(u64, u64)> {
+/// Returns `(accessed, modified)`. The times are in seconds from the Unix epoch.
+pub fn get_file_times<P: AsRef<Path>>(path: P) -> io::Result<(i64, i64)> {
     #[cfg(unix)]
-    fn utime<P: AsRef<Path>>(path: P) -> io::Result<(u64, u64)> {
+    fn utime<P: AsRef<Path>>(path: P) -> io::Result<(i64, i64)> {
         use std::fs::metadata;
         use std::os::unix::fs::MetadataExt;
 
         let meta = metadata(path)?;
-        Ok((meta.atime() as u64, meta.mtime() as u64))
+        Ok((meta.atime(), meta.mtime()))
     }
 
     #[cfg(windows)]
-    fn utime<P: AsRef<Path>>(path: P) -> io::Result<(u64, u64)> {
+    fn utime<P: AsRef<Path>>(path: P) -> io::Result<(i64, i64)> {
         use kernel32::GetFileTime;
         use std::fs::OpenOptions;
         use std::os::windows::prelude::*;
@@ -141,12 +141,12 @@ pub fn get_file_times<P: AsRef<Path>>(path: P) -> io::Result<(u64, u64)> {
         }
 
         // FILETIME is a count of 100ns intervals, and there are 10^7 of these in a second
-        fn to_seconds(ft: FILETIME) -> u64 {
+        fn to_seconds(ft: FILETIME) -> i64 {
             let lo = ft.dwLowDateTime as u64;
             let hi = (ft.dwHighDateTime as u64) << 32;
             let intervals = lo + hi - 116_444_736_000_000_000;
 
-            intervals / 10_000_000
+            (intervals / 10_000_000) as i64
         }
 
         Ok((to_seconds(atime), to_seconds(mtime)))
