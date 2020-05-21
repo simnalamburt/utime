@@ -144,9 +144,9 @@ pub fn get_file_times<P: AsRef<Path>>(path: P) -> io::Result<(i64, i64)> {
         fn to_seconds(ft: FILETIME) -> i64 {
             let lo = ft.dwLowDateTime as u64;
             let hi = (ft.dwHighDateTime as u64) << 32;
-            let intervals = lo + hi - 116_444_736_000_000_000;
+            let intervals = (lo + hi) as i64 - 116_444_736_000_000_000;
 
-            (intervals / 10_000_000) as i64
+            intervals / 10_000_000
         }
 
         Ok((to_seconds(atime), to_seconds(mtime)))
