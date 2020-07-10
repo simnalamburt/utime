@@ -22,8 +22,6 @@
 extern crate libc;
 
 #[cfg(windows)]
-extern crate kernel32;
-#[cfg(windows)]
 extern crate winapi;
 
 use std::io;
@@ -65,14 +63,14 @@ pub fn set_file_times<P: AsRef<Path>>(path: P, accessed: i64, modified: i64) -> 
 
     #[cfg(windows)]
     fn utime<P: AsRef<Path>>(path: P, atime: i64, mtime: i64) -> io::Result<()> {
-        use kernel32::SetFileTime;
         use std::fs::OpenOptions;
         use std::os::windows::prelude::*;
-        use winapi::{DWORD, FILETIME};
+        use winapi::shared::minwindef::{DWORD, FILETIME};
+        use winapi::um::fileapi::SetFileTime;
 
         let f = OpenOptions::new()
             .write(true)
-            .custom_flags(winapi::FILE_FLAG_BACKUP_SEMANTICS)
+            .custom_flags(winapi::um::winbase::FILE_FLAG_BACKUP_SEMANTICS)
             .open(path)?;
         let atime = to_filetime(atime);
         let mtime = to_filetime(mtime);
@@ -119,10 +117,10 @@ pub fn get_file_times<P: AsRef<Path>>(path: P) -> io::Result<(i64, i64)> {
 
     #[cfg(windows)]
     fn utime<P: AsRef<Path>>(path: P) -> io::Result<(i64, i64)> {
-        use kernel32::GetFileTime;
         use std::fs::OpenOptions;
         use std::os::windows::prelude::*;
-        use winapi::FILETIME;
+        use winapi::shared::minwindef::FILETIME;
+        use winapi::um::fileapi::GetFileTime;
 
         let f = OpenOptions::new().write(true).open(path)?;
         let handle = f.as_raw_handle() as *mut _;

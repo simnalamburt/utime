@@ -15,10 +15,11 @@ repository = "https://github.com/simnalamburt/utime"
 license = "Apache-2.0 OR MIT"
 keywords = ["utime", "mtime"]
 
-[dependencies]
+[target.'cfg(unix)'.dependencies]
 libc = "0.2"
-winapi = "0.2"
-kernel32-sys = "0.2"
+
+[target.'cfg(windows)'.dependencies]
+winapi = { version = "0.3", features = ["fileapi", "minwindef", "winbase"] }
 
 [badges]
 maintenance = { status = "passively-maintained" }

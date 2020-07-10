@@ -1,10 +1,5 @@
 extern crate utime;
 
-#[cfg(windows)]
-extern crate kernel32;
-#[cfg(windows)]
-extern crate winapi;
-
 use std::fs::File;
 use std::time::{SystemTime, UNIX_EPOCH};
 use utime::*;
