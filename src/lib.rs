@@ -1,22 +1,53 @@
-//! A missing utime function for Rust
+//! (Deprecated) Rust's once-missing utime function
 //!
-//! Standard library of Rust doesn't provide stable way to set the atime/mtime of a
-//! file. This crate provides a stable way to change a file's last modification and
-//! access time.
+//! This crate was originally created to provide a missing utime function for Rust,
+//! allowing users to set the [atime/mtime] of a file, as the Rust standard library
+//! did not offer a stable method for this functionality.
+//!
+//! As of Rust 1.75.0, the standard library now includes [`File::set_times`], which
+//! provides a stable and native way to update a file’s last modification and access
+//! time.
+//!
+//! [atime/mtime]: https://man7.org/linux/man-pages/man3/stat.3type.html#SYNOPSIS:~:text=file%20has%20holes.%29-,st_atime,-This%20is%20the
+//! [`File::set_times`]: https://doc.rust-lang.org/stable/std/fs/struct.File.html#method.set_times
+//!
+//! ### Recommendation
+//! If you are using Rust 1.75.0 or later, it is recommended to use the native
+//! [`File::set_times`] function instead of this crate.
+//!
+//! ```rust
+//! use std::fs::{File, FileTimes};
+//! use std::time::SystemTime;
+//!
+//! # fn main() -> std::io::Result<()> {
+//! let times = FileTimes::new()
+//!     .set_accessed(SystemTime::now())
+//!     .set_modified(SystemTime::UNIX_EPOCH);
+//! File::create("target/testdummy")?.set_times(times)?;
+//! # Ok(())
+//! # }
+//! ```
+//!
+//! ### For Rust <1.75.0 users
+//! For projects using older Rust versions, you may still find this library useful.
+//! See [documentation](https://docs.rs/utime) for the further details.
 //!
 //! ```rust
 //! use std::fs::File;
 //! use utime::*;
 //!
-//! File::create("target/testdummy").unwrap();
-//! set_file_times("target/testdummy", 1000000, 1000000000).unwrap();
+//! # fn main() -> std::io::Result<()> {
+//! File::create("target/testdummy")?;
+//! set_file_times("target/testdummy", 1000000, 1000000000)?;
 //!
-//! let (accessed, modified) = get_file_times("target/testdummy").unwrap();
+//! let (accessed, modified) = get_file_times("target/testdummy")?;
 //! assert_eq!(accessed, 1000000);
 //! assert_eq!(modified, 1000000000);
+//! # Ok(())
+//! # }
 //! ```
 
-#![deny(warnings, missing_docs)]
+#![deny(missing_docs)]
 
 #[cfg(unix)]
 extern crate libc;
@@ -32,6 +63,15 @@ use std::path::Path;
 /// The file at the path specified will have its last access time set to
 /// `accessed` and its modification time set to `modified`. The times specified
 /// should be in seconds from the Unix epoch.
+///
+/// ### Deprecated
+/// Starting from Rust 1.75.0, [`File::set_times`] is now available. Please use [`File::set_times`]
+/// instead.
+///
+/// [`File::set_times`]: https://doc.rust-lang.org/stable/std/fs/struct.File.html#method.set_times
+#[deprecated(
+    note = "Starting from Rust 1.75.0, File::set_times is now available. Please use File::set_times instead."
+)]
 pub fn set_file_times<P: AsRef<Path>>(path: P, accessed: i64, modified: i64) -> io::Result<()> {
     #[cfg(unix)]
     fn utime<P: AsRef<Path>>(path: P, atime: i64, mtime: i64) -> io::Result<()> {
@@ -105,6 +145,17 @@ pub fn set_file_times<P: AsRef<Path>>(path: P, accessed: i64, modified: i64) -> 
 /// Retrieve the timestamps for a file's last modification and access time.
 ///
 /// Returns `(accessed, modified)`. The times are in seconds from the Unix epoch.
+///
+/// ### Deprecated
+///
+/// Starting from Rust 1.10.0, [`Metadata::accessed`] and [`Metadata::modified`] are now available.
+/// Please use [`Metadata::accessed`] and [`Metadata::modified`] instead.
+///
+/// [`Metadata::accessed`]: https://doc.rust-lang.org/stable/std/fs/struct.Metadata.html#method.accessed
+/// [`Metadata::modified`]: https://doc.rust-lang.org/stable/std/fs/struct.Metadata.html#method.modified
+#[deprecated(
+    note = "Starting from Rust 1.10.0, Metadata::accessed and Metadata::modified are now available. Please use Metadata::accessed and Metadata::modified instead."
+)]
 pub fn get_file_times<P: AsRef<Path>>(path: P) -> io::Result<(i64, i64)> {
     #[cfg(unix)]
     fn utime<P: AsRef<Path>>(path: P) -> io::Result<(i64, i64)> {

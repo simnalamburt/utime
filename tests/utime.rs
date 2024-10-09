@@ -1,8 +1,8 @@
-extern crate utime;
+#![allow(deprecated, reason = "tests for deprecated functions")]
 
 use std::fs::File;
 use std::time::{SystemTime, UNIX_EPOCH};
-use utime::*;
+use utime::{get_file_times, set_file_times};
 
 fn as_secs(v: std::io::Result<SystemTime>) -> u64 {
     v.unwrap().duration_since(UNIX_EPOCH).unwrap().as_secs()

@@ -24,7 +24,7 @@ fn main() -> Result<()> {
     let times = FileTimes::new()
         .set_accessed(SystemTime::now())
         .set_modified(SystemTime::UNIX_EPOCH);
-    File::options().write(true).open("dest")?.set_times(times)?;
+    File::create("target/testdummy")?.set_times(times)?;
     Ok(())
 }
 ```
