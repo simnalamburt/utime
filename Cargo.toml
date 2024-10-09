@@ -15,6 +15,9 @@ repository = "https://github.com/simnalamburt/utime"
 license = "Apache-2.0 OR MIT"
 keywords = ["utime", "mtime"]
 
+[build-dependencies]
+version_check = "0.9.5"
+
 [target.'cfg(unix)'.dependencies]
 libc = "0.2"
 

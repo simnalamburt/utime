@@ -69,8 +69,11 @@ use std::path::Path;
 /// instead.
 ///
 /// [`File::set_times`]: https://doc.rust-lang.org/stable/std/fs/struct.File.html#method.set_times
-#[deprecated(
-    note = "Starting from Rust 1.75.0, File::set_times is now available. Please use File::set_times instead."
+#[cfg_attr(
+    rustc_1_75_plus,
+    deprecated(
+        note = "Starting from Rust 1.75.0, File::set_times is now available. Please use File::set_times instead."
+    )
 )]
 pub fn set_file_times<P: AsRef<Path>>(path: P, accessed: i64, modified: i64) -> io::Result<()> {
     #[cfg(unix)]
@@ -153,8 +156,11 @@ pub fn set_file_times<P: AsRef<Path>>(path: P, accessed: i64, modified: i64) -> 
 ///
 /// [`Metadata::accessed`]: https://doc.rust-lang.org/stable/std/fs/struct.Metadata.html#method.accessed
 /// [`Metadata::modified`]: https://doc.rust-lang.org/stable/std/fs/struct.Metadata.html#method.modified
-#[deprecated(
-    note = "Starting from Rust 1.10.0, Metadata::accessed and Metadata::modified are now available. Please use Metadata::accessed and Metadata::modified instead."
+#[cfg_attr(
+    rustc_1_10_plus,
+    deprecated(
+        note = "Starting from Rust 1.10.0, Metadata::accessed and Metadata::modified are now available. Please use Metadata::accessed and Metadata::modified instead."
+    )
 )]
 pub fn get_file_times<P: AsRef<Path>>(path: P) -> io::Result<(i64, i64)> {
     #[cfg(unix)]
