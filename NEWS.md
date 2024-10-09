@@ -1,4 +1,7 @@
 # utime changelog
+## 0.3.3
+* Modified to prevent deprecation warnings on lower Rust versions.
+
 ## 0.3.2
 * Marked all functions as deprecated. See [README.md] for the further details.
 
